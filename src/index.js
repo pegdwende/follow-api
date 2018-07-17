@@ -2,18 +2,24 @@
  * Created by pegdwende on 7/13/2018.
  */
 
-import express from 'express';
-import path from 'path';
+import express from "express";
+import path from "path";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import Promise from "bluebird";
+
+import auth from "./routes/auth";
+
 
 const app = express();
+app.use(bodyParser.json());
 
-app.post('/api/auth',(req, res)=>{
-  res.status(400).json({errors:{global:"Invalid credentials"}});
- });
+mongoose.connect("mongodb:/localhost:27017/follow");
 
-app.get('/*', (req, res)=>{
- res.sendFile(path.join(__dirname,'index.html'))
-}
-);
+app.use("/api/auth", auth);
 
-app.listen(8080,()=>console.log('Running on local 8080'));
+app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.listen(8080, () => console.log("Running on localhost:8080"));
